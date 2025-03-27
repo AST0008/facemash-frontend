@@ -1,103 +1,111 @@
-import Image from "next/image";
+"use client";
+import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface Photo {
+  _id: string;
+  imageUrl: string;
+  name: string;
+  rating: number;
+}
+
+const isProduction =
+  process.env.NODE_ENV === "production" ||
+  process.env.VERCEL_ENV === "production";
+
+const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const fetchPhotos = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}api/photos/random`
+      );
+      setPhotos(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching photos:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
+
+  const handleVote = async (winnerId: string, loserId: string) => {
+    try {
+      await axios.post(`${BACKEND_URL}api/photos/vote`, {
+        winnerId,
+        loserId,
+      });
+      fetchPhotos();
+    } catch (error) {
+      console.error("Error voting on photo:", error);
+    }
+  };
+
+  if (loading) return <p className="text-2xl">Loading...</p>;
+
+  return (
+    <main className="min-h-screen bg-amber-50 flex flex-col items-center text-center p-8">
+      <div className="container text-black px-4  md:px-0">
+        <h1 className="text-4xl bg-red-600 text-white font-bold mb-4">
+          FACEMASH
+        </h1>
+        <div>
+          <blockquote className="text-2xl my-10 font-semibold ">
+            Were we let in for our looks? No. Will we be judged on them? Yes.
+          </blockquote>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="grid grid-cols-1 my-10 justify-center items-center gap-8">
+          {photos.length === 2 && (
+            <div className="flex items-center my-10 justify-center gap-8">
+              {/* First Image */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={photos[0].imageUrl}
+                  alt={photos[0].name}
+                  width={300}
+                  height={900}
+                  className="rounded-lg shadow-lg cursor-pointer"
+                  onClick={() => handleVote(photos[0]._id, photos[1]._id)}
+                />
+                <p className="text-xl text-green-600 font-semibold mt-2">
+                  {photos[0].name} (Rating: {photos[0].rating})
+                </p>
+              </div>
+
+              {/* "Vs" in the middle */}
+              <div className="text-6xl font-bold">OR</div>
+
+              {/* Second Image */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={photos[1].imageUrl}
+                  alt={photos[1].name}
+                  width={300}
+                  height={600}
+                  className="rounded-lg shadow-lg cursor-pointer"
+                  onClick={() => handleVote(photos[1]._id, photos[0]._id)}
+                />
+                <p className="text-xl text-green-600 font-semibold mt-2">
+                  {photos[1].name} (Rating: {photos[1].rating})
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+        <Link href="/leaderboard">
+          <p className="text-2xl font-semibold italic">View Leaderboard</p>
+        </Link>
+        <Link href="/add">
+          <p className="text-2xl font-semibold italic">Add Photo</p>
+        </Link>
+      </div>
+    </main>
   );
 }
