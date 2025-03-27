@@ -10,11 +10,10 @@ interface Photo {
   rating: number;
 }
 
-const isProduction =
-  process.env.NODE_ENV === "production" ||
-  process.env.VERCEL_ENV === "production";
-
-const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/"
+const isProduction = process.env.NODE_ENV === "production";
+const BACKEND_URL = isProduction
+  ? process.env.BACKEND_URL
+  : "http://localhost:5000/";
 
 export default function Home() {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -22,9 +21,7 @@ export default function Home() {
 
   const fetchPhotos = async () => {
     try {
-      const response = await axios.get(
-        `${BACKEND_URL}api/photos/random`
-      );
+      const response = await axios.get(`${BACKEND_URL}api/photos/random`);
       setPhotos(response.data);
       setLoading(false);
     } catch (error) {
@@ -70,7 +67,7 @@ export default function Home() {
                   src={photos[0].imageUrl}
                   alt={photos[0].name}
                   width={300}
-                  height={900}
+                  height={600}
                   className="rounded-lg shadow-lg cursor-pointer"
                   onClick={() => handleVote(photos[0]._id, photos[1]._id)}
                 />

@@ -4,12 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 
-const isProduction =
-  process.env.NODE_ENV === "production" ||
-  process.env.VERCEL_ENV === "production";
-
-const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/"
-
+const isProduction = process.env.NODE_ENV === "production";
+const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/";
 
 const page = () => {
   const [name, setName] = useState("");
@@ -54,7 +50,10 @@ const page = () => {
               required
               className="p-2 border-2 border-black rounded-md"
             />
-            <button type="submit" className="bg-red-600 text-white p-2 rounded-md">
+            <button
+              type="submit"
+              className="bg-red-600 text-white p-2 rounded-md"
+            >
               Upload
             </button>
           </form>
@@ -71,4 +70,3 @@ const page = () => {
 };
 
 export default page;
-
