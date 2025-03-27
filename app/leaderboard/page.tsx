@@ -40,22 +40,23 @@ export default function Leaderboard() {
           Leaderboard
         </h1>
         <div>
-          <ul className="grid grid-cols-1 my-10 justify-center items-center gap-8">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 my-10 justify-center items-center">
             {photos.map((photo, index) => (
               <li
                 key={photo._id}
-                className="flex flex-col items-center my-10 gap-4"
+                className="flex flex-col items-center bg-white rounded-lg shadow-lg p-8"
               >
                 <img
                   src={photo.imageUrl}
                   alt={photo.name}
-                  width={100}
-                  height={100}
+                  width={150}
+                  height={150}
+                  className="rounded-full"
                 />
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-semibold mt-4">
                   {index + 1}. {photo.name}
                 </p>
-                <p className="text-xl font-medium">Rating: {photo.rating}</p>
+                <p className="text-xl font-medium mt-2">Rating: {photo.rating}</p>
               </li>
             ))}
           </ul>

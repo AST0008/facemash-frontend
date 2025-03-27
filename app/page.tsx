@@ -45,63 +45,67 @@ export default function Home() {
     }
   };
 
-  if (loading) return <p className="text-2xl">Loading...</p>;
+  if (loading) return <p className="text-2xl text-center mt-10">Loading...</p>;
 
   return (
-    <main className="min-h-screen bg-amber-50 flex flex-col items-center text-center p-8">
-      <div className="container text-black px-4  md:px-0">
-        <h1 className="text-4xl bg-red-600 text-white font-bold mb-4">
+    <main className="min-h-screen bg-amber-50 text-black flex flex-col items-center text-center px-4 py-10">
+      <div className="max-w-4xl w-full">
+        <h1 className="text-4xl md:text-5xl bg-red-600 text-white font-bold py-3 mb-6 rounded-lg">
           FACEMASH
         </h1>
-        <div>
-          <blockquote className="text-2xl my-10 font-semibold ">
-            Were we let in for our looks? No. Will we be judged on them? Yes.
-          </blockquote>
-        </div>
-        <div className="grid grid-cols-1 my-10 justify-center items-center gap-8">
-          {photos.length === 2 && (
-            <div className="flex items-center my-10 justify-center gap-8">
-              {/* First Image */}
-              <div className="flex flex-col items-center">
-                <img
-                  src={photos[0].imageUrl}
-                  alt={photos[0].name}
-                  width={300}
-                  height={600}
-                  className="rounded-lg shadow-lg cursor-pointer"
-                  onClick={() => handleVote(photos[0]._id, photos[1]._id)}
-                />
-                <p className="text-xl text-green-600 font-semibold mt-2">
-                  {photos[0].name} (Rating: {photos[0].rating})
-                </p>
-              </div>
+        <blockquote className="text-lg  md:text-2xl my-6 font-semibold px-4 md:px-0">
+          Were we let in for our looks? No. Will we be judged on them? Yes.
+        </blockquote>
+        <blockquote className="text-lg md:text-3xl my-6 font-semibold px-4 md:px-0">
+         Who's Hotter?, Click To Choose
+        </blockquote>
 
-              {/* "Vs" in the middle */}
-              <div className="text-6xl font-bold">OR</div>
-
-              {/* Second Image */}
-              <div className="flex flex-col items-center">
-                <img
-                  src={photos[1].imageUrl}
-                  alt={photos[1].name}
-                  width={300}
-                  height={600}
-                  className="rounded-lg shadow-lg cursor-pointer"
-                  onClick={() => handleVote(photos[1]._id, photos[0]._id)}
-                />
-                <p className="text-xl text-green-600 font-semibold mt-2">
-                  {photos[1].name} (Rating: {photos[1].rating})
-                </p>
-              </div>
+        {photos.length === 2 && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
+            {/* First Image */}
+            <div className="flex flex-col items-center">
+              <img
+                src={photos[0].imageUrl}
+                alt={photos[0].name}
+                className="rounded-lg shadow-lg cursor-pointer w-[450px] md:w-[500px] h-auto"
+                onClick={() => handleVote(photos[0]._id, photos[1]._id)}
+              />
+              <p className="text-lg md:text-xl text-green-600 font-semibold mt-2">
+                {photos[0].name} (Rating: {photos[0].rating})
+              </p>
             </div>
-          )}
+
+            {/* "OR" in the middle */}
+            <div className="text-4xl md:text-6xl font-bold">OR</div>
+
+            {/* Second Image */}
+            <div className="flex flex-col items-center">
+              <img
+                src={photos[1].imageUrl}
+                alt={photos[1].name}
+                className="rounded-lg shadow-lg cursor-pointer w-[450px] md:w-[500px] h-auto"
+                onClick={() => handleVote(photos[1]._id, photos[0]._id)}
+              />
+              <p className="text-lg md:text-xl text-green-600 font-semibold mt-2">
+                {photos[1].name} (Rating: {photos[1].rating})
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation Links */}
+        <div className="mt-8 flex flex-col md:flex-row gap-4">
+          <Link href="/leaderboard">
+            <p className="text-lg text-black md:text-2xl font-semibold italic underline cursor-pointer">
+              View Leaderboard
+            </p>
+          </Link>
+          <Link href="/add">
+            <p className="text-lg text-red-800 md:text-2xl font-semibold italic underline cursor-pointer">
+              Add Photo
+            </p>
+          </Link>
         </div>
-        <Link href="/leaderboard">
-          <p className="text-2xl font-semibold italic">View Leaderboard</p>
-        </Link>
-        <Link href="/add">
-          <p className="text-2xl font-semibold italic">Add Photo</p>
-        </Link>
       </div>
     </main>
   );
