@@ -5,7 +5,7 @@ import Link from "next/link";
 
 
 const isProduction = process.env.NODE_ENV === "production";
-const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/";
+const NEXT_PUBLIC_BACKEND_URL = isProduction ? process.env.NEXT_PUBLIC_BACKEND_URL : "http://localhost:5000/";
 
 const page = () => {
   const [name, setName] = useState("");
@@ -21,7 +21,7 @@ const page = () => {
     formdata.append("photo", file);
 
     try {
-      await axios.post(`${BACKEND_URL}api/photos/upload`, formdata);
+      await axios.post(`${NEXT_PUBLIC_BACKEND_URL}api/photos/upload`, formdata);
       alert("Upload successful!");
     } catch (error) {
       console.error("Upload failed:", error);

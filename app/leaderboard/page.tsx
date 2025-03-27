@@ -12,18 +12,18 @@ interface Photo {
 
 
 const isProduction = process.env.NODE_ENV === "production";
-const BACKEND_URL = isProduction ? process.env.BACKEND_URL : "http://localhost:5000/";
+const NEXT_PUBLIC_BACKEND_URL = isProduction ? process.env.NEXT_PUBLIC_BACKEND_URL : "http://localhost:5000/";
 
 
 export default function Leaderboard() {
   const [photos, setPhotos] = useState<Photo[]>([]);
-  console.log(BACKEND_URL)
+  console.log(NEXT_PUBLIC_BACKEND_URL)
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}api/photos/leaderboard`
+          `${NEXT_PUBLIC_BACKEND_URL}api/photos/leaderboard`
         );
         setPhotos(response.data);
       } catch (error) {

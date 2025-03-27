@@ -11,8 +11,8 @@ interface Photo {
 }
 
 const isProduction = process.env.NODE_ENV === "production";
-const BACKEND_URL = isProduction
-  ? process.env.BACKEND_URL
+const NEXT_PUBLIC_BACKEND_URL = isProduction
+  ? process.env.NEXT_PUBLIC_BACKEND_URL
   : "http://localhost:5000/";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
 
   const fetchPhotos = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}api/photos/random`);
+      const response = await axios.get(`${NEXT_PUBLIC_BACKEND_URL}api/photos/random`);
       setPhotos(response.data);
       setLoading(false);
     } catch (error) {
@@ -35,7 +35,7 @@ export default function Home() {
 
   const handleVote = async (winnerId: string, loserId: string) => {
     try {
-      await axios.post(`${BACKEND_URL}api/photos/vote`, {
+      await axios.post(`${NEXT_PUBLIC_BACKEND_URL}api/photos/vote`, {
         winnerId,
         loserId,
       });
